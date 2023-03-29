@@ -31,7 +31,7 @@
     {{!-- LEFT FORM --}}
     <div class="justify-content-center">
       <h4 class="mb-3">Billing address</h4>
-      <form id="reqToPayForm" method="POST" action="/reqToPay">
+      <form id="reqToPayForm" method="POST" action="/getpaid">
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="firstName">First name*</label>
@@ -57,8 +57,8 @@
         </div>
 
         <div class="mb-3">
-          <label for="address">Address <span class="text-muted">(Optional)</label>
-          <input type="text" class="form-control" id="address" placeholder="1234 Main St" name="address">
+          <label for="address">Amount <span class="text-muted"></label>
+          <input type="text" class="form-control" id="address" placeholder="1234" name="amount">
           <div class="invalid-feedback">
             Please enter your shipping address.
           </div>
@@ -86,7 +86,6 @@
           <div class="col-md-3 mb-3">
             <label for="number">Phone number*</span></label>
             <input  maxlength="14" type="tel" name="number" class="form-control" id="zip" placeholder="" required>
-            <input type="hidden" name="totalAmount" value="" id="inputTotalAmount" />
             <div class="invalid-feedback">
               Phone number required.
             </div>

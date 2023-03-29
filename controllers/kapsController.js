@@ -5,7 +5,9 @@ const momo = require("mtn-momo")
 const Cryptr = require('cryptr')
 // const cryptr = new Cryptr(process.env.SECRET_KEY)
 
-
+//Localstorage
+// var LocalStorage = require('node-localstorage').LocalStorage;
+// localStorage = new LocalStorage('./localStorage');
 
 
 //API CONFIG PARAMS
@@ -19,6 +21,19 @@ const Cryptr = require('cryptr')
 //   primaryKey: process.env.PRIMARY_KEY
 // })
 
+//INITIALIZING MOMO LIBRARY
+const { Disbursements } = momo.create({
+  callbackHost: process.env.CALLBACK_HOST
+})
+
+//Initialising disbursements
+const disbursements = Disbursements({
+  userSecret: process.env.USER_SECRET,
+  userId: process.env.USER_ID,
+  primaryKey: process.env.PRIMARY_KEY
+})
+
+
 
 //HOME  @ / [GET]
 //@ Public access 
@@ -28,14 +43,63 @@ const Home = asyncHandler( async(req, res)=>
 	//
   res.render('home')
   
-  //Delete the alert 
+
+}) //End Home controller 
+
+
+
+//GETPAID  @ / [POST]
+//@ Private access
+const GetPaid = asyncHandler (async(req,res)=>{
+
+  //Destructure Form values
+  const { fname, lname, number, amount} = req.body;
+
+  //Disbursements
+  disbursements
+  .transfer({
+    amount: parseInt(amount),
+    currency: "EUR",
+    externalId: "947354",  //Self Momo number 
+    payee: {
+      partyIdType: "MSISDN", //Mesage type notification/alert 
+      partyId: number //Client phone number 
+    },
+    payerMessage: "testing message",
+    payeeNote: "Thanks for using our services",
+    callbackUrl: 'https://75f59b50.ngrok.io'
+  })
+  .then(transactionId => {
+    console.log({ transactionId });
+
+    // Get transaction status
+    return disbursements.getTransaction(transactionId)
+    console.log(transactionId)
+    return false
+
+    //
+    res.redirect(`/success/${transactionID}`)
+  })
+  .catch(error => {
+    console.log(error);
+  });
 })
 
 
 
 
+//SUCCESS  @ / [GET]
+//@ Private access 
+
+const Success = asyncHandler (async(req,res)=>{
+
+  //
+  res.render('success')
+})
+
+
 
 //Export to kapsRoutes 
 module.exports = {
-	Home
+	Home, Success, GetPaid
 }
