@@ -67,7 +67,7 @@ const GetPaid = asyncHandler (async(req,res)=>{
     },
     payerMessage: "testing message",
     payeeNote: "Thanks for using our services",
-    callbackUrl: 'https://75f59b50.ngrok.io'
+    callbackUrl: process.env.CALLBACK_URL
   })
   .then(transactionId => {
     console.log({ transactionId });
