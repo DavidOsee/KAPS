@@ -70,11 +70,11 @@ const GetPaid = asyncHandler (async(req,res)=>{
     callbackUrl: process.env.CALLBACK_URL
   })
   .then(transactionId => {
-    console.log({ transactionId });
+    console.log(fname +" "+ lname);
 
     // Get transaction status
     return disbursements.getTransaction(transactionId)
-    console.log(transactionId)
+    //console.log(fname + lname)
     return false
 
     //
@@ -98,8 +98,18 @@ const Success = asyncHandler (async(req,res)=>{
 })
 
 
+//NOTFOUND  @ / [GET]
+//@ Private access 
+
+const NotFound = (req,res)=>{
+
+  //
+  res.render('404')
+}
+
+
 
 //Export to kapsRoutes 
 module.exports = {
-	Home, Success, GetPaid
+	Home, Success, GetPaid, NotFound
 }

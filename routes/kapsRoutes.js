@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router()
 
-const {Home, Success, GetPaid} = require('../controllers/kapsController.js')
+const {Home, Success, GetPaid, NotFound} = require('../controllers/kapsController.js')
 
 //Middlewares
 //const protected = require('../middlewares/protect')
@@ -12,6 +12,7 @@ const {Home, Success, GetPaid} = require('../controllers/kapsController.js')
 router
 .get('/', Home)
 .get('/success', Success)
+.get('*', NotFound)
 
 //POST REQ
 router
