@@ -7,10 +7,6 @@ const errorHandler = (err, req, res, next)=>{
     //SET ALL ROUTE RESPONSES WITH CAUGHT CODE  
     res.status(code)
 
-    //CHECK IF CODE ==404 
-    // if(code == 404)
-    //     res.render('404')
-
     //RETURN ERROR 
     res.json({
         message : err.message, 

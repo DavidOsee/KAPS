@@ -5,13 +5,13 @@ const router = express.Router()
 const {Home, Success, GetPaid, NotFound} = require('../controllers/kapsController.js')
 
 //Middlewares
-//const protected = require('../middlewares/protect')
+const Protect = require('../middlewares/authMiddleware.js')
 
 
 //
 router
 .get('/', Home)
-.get('/success', Success)
+.get('/success', Protect, Success)
 .get('*', NotFound)
 
 //POST REQ

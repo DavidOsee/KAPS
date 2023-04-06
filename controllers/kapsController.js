@@ -2,24 +2,12 @@
 const asyncHandler = require('express-async-handler')
 const uuid = require('uuid')
 const momo = require("mtn-momo")
-const Cryptr = require('cryptr')
-// const cryptr = new Cryptr(process.env.SECRET_KEY)
+const jwt = require('jsonwebtoken')
 
 //Localstorage
-// var LocalStorage = require('node-localstorage').LocalStorage;
-// localStorage = new LocalStorage('./localStorage');
+const LocalStorage = require('node-localstorage').LocalStorage
+const localStorage = new LocalStorage('./scratch')
 
-
-//API CONFIG PARAMS
-// const { Collections } = momo.create({
-//   callbackHost: process.env.CALLBACK_HOST
-// })
-
-// const collections = Collections({
-//   userSecret: "445477d7de844d2c816b2ede39da32b7",
-//   userId: "69eba058-e091-4d86-8f1d-22f97f4050ee",
-//   primaryKey: process.env.PRIMARY_KEY
-// })
 
 //INITIALIZING MOMO LIBRARY
 const { Disbursements } = momo.create({
@@ -70,18 +58,26 @@ const GetPaid = asyncHandler (async(req,res)=>{
     callbackUrl: process.env.CALLBACK_URL
   })
   .then(transactionId => {
-    console.log(fname +" "+ lname);
+   
+    //CREATE TRANSACTION DETAILS OBJ 
+    const transaction_details = {
+      fname, lname, number, amount, transactionId
+    }
 
-    // Get transaction status
-    return disbursements.getTransaction(transactionId)
-    //console.log(fname + lname)
-    return false
+    //GENERATE JWT WITH TRANSACTION DETAILS IN PAYLOAD
+    const token = generateToken(transaction_details)
 
-    //
-    res.redirect(`/success/${transactionID}`)
+    //WRITE TOKEN IN LOCALSTORAGE 
+    localStorage.setItem("token", token)
+    
+
+    //REDIRECT
+    res.redirect(`/success`)
   })
   .catch(error => {
-    console.log(error);
+    //
+    res.render('error', {error}) //RENDER A TEMPLATE THAT NICELY DISPLAYS ERROR  
+    console.log(error)
   });
 })
 
@@ -107,6 +103,12 @@ const NotFound = (req,res)=>{
   res.render('404')
 }
 
+
+//GENERATE JWT 
+const generateToken = (transaction_details)=>{
+  //Create token 
+  return jwt.sign(transaction_details, process.env.SECRET_KEY, { expiresIn : "1s"})
+}
 
 
 //Export to kapsRoutes 
